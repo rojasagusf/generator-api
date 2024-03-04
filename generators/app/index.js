@@ -25,12 +25,6 @@ module.exports = class extends Generator {
                 name: 'withSchedule',
                 message: 'Would you like to use schedules?',
                 default: false
-            },
-            {
-                type: 'confirm',
-                name: 'withAuth',
-                message: 'Would you like to use authentication?',
-                default: false
             }
         ];
 
@@ -67,31 +61,6 @@ const scheduleRunner = require('./src/utils/schedule-runner');`;
             templateData.packagejsonDependences += `,
 			"node-schedule": "^2.1.1"`;
             templateData.appFunctions += 'scheduleRunner();';
-        }
-
-        if (this.props.withAuth) {
-            this.sourceRoot(this.sourceRoot() + '/02-auth');
-            this.fs.copyTpl(
-                this.templatePath('.'),
-                this.destinationPath('.'),
-                templateData,
-                {},
-                {globOptions: {dot: true}}
-            );
-            templateData.packagejsonDependences += `,
-			"jsonwebtoken": "^9.0.2";`;
-            templateData.appRequires += `
-			const publicPaths = require('./config/public-paths');
-			const extractJwt = require('./src/utils/extract-jwt');`;
-            templateData.appAfterInitializePrevRoutes += `
-			app.get(publicPaths.regex('get'), extractJwt);
-			app.put(publicPaths.regex('put'), extractJwt);
-			app.post(publicPaths.regex('post'), extractJwt);
-			app.delete(publicPaths.regex('delete'), extractJwt);`;
-            templateData.authMockRequires += `
-			const realJWT = require('jsonwebtoken');
-			const jsonwebtokenMock = require('../mocks/jsonwebtoken-mock')(realJWT);
-			mockery.registerMock('jsonwebtoken', jsonwebtokenMock);`;
         }
 
         this.sourceRoot(this.sourceRoot() + '/../00-basic');
