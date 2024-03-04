@@ -1,5 +1,5 @@
 {
-  "name": "generator-expressapi",
+  "name": "generator-rojasexpress",
   "version": "0.0.0",
   "description": "An api generator in express",
   "homepage": "rojasagusf.com",
@@ -74,6 +74,6 @@
     "pretest": "eslint .",
     "test": "jest"
   },
-  "repository": "rojasagusf/generator-expressapi",
+  "repository": "rojasagusf/generator-rojasexpress",
   "license": "MIT"
 }
