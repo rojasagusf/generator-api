@@ -21,11 +21,27 @@ module.exports = class extends Generator {
                 default: 'express-api'
             },
             {
+                type: "list",
+                name: "databaseChoice",
+                message: "What database type would you like to?",
+                choices: [
+                    {
+                        name: 'MySQL',
+                        value: 'mysql'
+                    },
+                    {
+                        name: 'PostgreSQL',
+                        value: 'psql'
+                    }
+                ]
+            },
+            {
                 type: 'confirm',
                 name: 'withSchedule',
                 message: 'Would you like to use schedules?',
                 default: false
-            }
+            },
+
         ];
 
         return this.prompt(prompts).then((props) => {
@@ -44,8 +60,21 @@ module.exports = class extends Generator {
             appExports: '',
             packagejsonDependences: '',
             packagejsonDevDependences: '',
-            authMockRequires: ''
+            authMockRequires: '',
+            database: '',
         };
+
+        if (this.props.databaseChoice === 'psql') {
+            templateData.database += `'postgres'`;
+            templateData.packagejsonDependences += `,
+    "pg": "^8.11.3"`;
+        }
+
+        if (this.props.databaseChoice === 'mysql') {
+            templateData.database += `'mysql'`;
+            templateData.packagejsonDependences += `,
+    "mysql2": "^3.9.2"`;
+        }
 
         if (this.props.withSchedule) {
             this.sourceRoot(this.sourceRoot() + '/../01-schedules');
@@ -59,7 +88,7 @@ module.exports = class extends Generator {
             templateData.appRequires += `
 const scheduleRunner = require('./src/utils/schedule-runner');`;
             templateData.packagejsonDependences += `,
-			"node-schedule": "^2.1.1"`;
+		"node-schedule": "^2.1.1"`;
             templateData.appFunctions += 'scheduleRunner();';
         }
 
