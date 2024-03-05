@@ -100,5 +100,9 @@ const scheduleRunner = require('./src/utils/schedule-runner');`;
             {},
             {globOptions: {dot: true}}
         );
+				this.fs.copy(
+					this.templatePath('../_gitignore'),
+					this.destinationPath('.gitignore')
+				);
     }
 };
